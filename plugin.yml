@@ -1,0 +1,15 @@
+name: GiveAllToAll
+version: 1.0.0
+description: GiveAll Plugin
+author: extended_clip
+main: com.extendedclip.giveallhand.GAH
+depend: [JSON_API]
+commands:
+  gah:
+    description: GiveAll
+    usage: '/gah <amount>'
+
+permissions:
+  gah.give:
+    description: GiveAll
+    default: op
