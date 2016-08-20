@@ -7,13 +7,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.coloredcarrot.mcapi.json.JSONComponent;
-import com.coloredcarrot.mcapi.json.JSONHoverAction;
 
 public class GAH extends JavaPlugin implements CommandExecutor {
 
@@ -52,17 +48,14 @@ public class GAH extends JavaPlugin implements CommandExecutor {
 					return true;
 				}
 				ItemStack i = new ItemStack(Material.valueOf(item), amount);
-				JSONComponent itemjson = new JSONComponent(i.getItemMeta().getDisplayName());
-				JSONHoverAction hover = new JSONHoverAction.ShowItemStack(i);
-				itemjson.setHoverAction(hover);
-				msg = replace(itemjson, "Console", msg, amount);
+				msg = replace(Material.valueOf(item), "Console", msg, amount);
 				Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
 				i.setAmount(amount);
 				for(Player user : Bukkit.getOnlinePlayers()){
 					user.getInventory().addItem(i);
 				}
 			}
-		return false;
+			return false;
 		}
 		
 		Player p = (Player) s;
@@ -81,13 +74,9 @@ public class GAH extends JavaPlugin implements CommandExecutor {
 			return true;
 		}
 		
-		JSONComponent itemjson = new JSONComponent(i.getItemMeta().getDisplayName());
-		JSONHoverAction hover = new JSONHoverAction.ShowItemStack(i);
-		itemjson.setHoverAction(hover);
-		
 		if (args.length > 0) {
 			if(isInt(args[0])){
-				msg = replace(itemjson, p.getName(), msg, Integer.valueOf(args[0]));
+				msg = replace(item, p.getName(), msg, Integer.valueOf(args[0]));
 				Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
 				i.setAmount(Integer.valueOf(args[0]));
 				for(Player user : Bukkit.getOnlinePlayers()){
@@ -95,7 +84,7 @@ public class GAH extends JavaPlugin implements CommandExecutor {
 				}
 			}
 		}else{
-			msg = replace(itemjson, p.getName(), msg, 1);
+			msg = replace(item, p.getName(), msg, 1);
 			Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
 			i.setAmount(1);
 			for(Player user : Bukkit.getOnlinePlayers()){
@@ -106,8 +95,8 @@ public class GAH extends JavaPlugin implements CommandExecutor {
 		return true;
 	}
 	
-	private String replace(JSONComponent itemjson, String p, String s, int n) {
-		return s.replace("%item%", itemjson.toString())
+	private String replace(Material item, String p, String s, int n) {
+		return s.replace("%item%", item.toString())
                 .replace("%player%", p)
                 .replace("%amount%", n+"");
     }
